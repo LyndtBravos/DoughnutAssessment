@@ -1,0 +1,263 @@
+<html>
+<head>
+<title>Down For Life</title>
+
+<style>
+body{
+	margin: 0;
+	font-family: Georgia;
+}
+
+.contact-us{
+	background-image: linear-gradient(
+	to right,
+	rgb(0, 114, 66) 0%,
+	rgb(4, 109, 91) 100%
+	);
+	color: white;
+	font-size: 20px;
+	padding: 40px;
+}
+
+.form-group{
+	margin-bottom: 20px;
+}
+
+form{
+	padding: 40px;
+}
+.form-group label{
+	display: block;
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.form-group input{
+	width: 320px;
+	padding: 10px;
+	font-size: 20px;
+	color: #333;
+	margin-bottom: 4px;
+}
+
+input.invalid{
+	border: 1px solid red;
+}
+
+.error-hint{
+	color: red;
+}
+
+hr{
+	height: 1px;
+	background-color: rgb(0, 114, 66);
+	border: none;
+	margin-top: 20px;
+	margin-bottom: 30px;
+}
+
+button{
+	padding: 10px;
+	font-size: 24px;
+	background: none;
+	border: 1px solid rgb(0, 114, 66);
+	border-radius: 10px;
+	transition: all 0.5s;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+button:hover{
+	background-color: rgb(0, 114, 66);
+	border: black;
+	color: white;
+}
+
+.hidden{
+	display: none;
+}
+
+.thank-you{
+	padding: 40px;
+	font-size: 32px;
+	text-align: center;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="contact-us">
+<h1>
+Contact Us
+</h1>
+<p>We'd love to hear from you again. Please send us your feedback</p>
+</div>
+
+<form style="margin: auto; width: 220px" id="logOrder" method="post" onsubmit="return checkInputs()">
+
+<div class="form-group">
+<label for="orderDate">Order Date</label>
+<input name="orderDate" id="order" placeholder="format(dd/MM/yyyy)"><br>
+<span id="od" style="color: red; font-size: 10px"></span>
+</div>
+
+<div class="form-group">
+<label for="collectionDate">Collection Date</label>
+<input name="collectionDate" id="collection" placeholder="format(dd/MM/yyyy)"><br>
+<span id="cd" style="color: red; font-size: 10px"></span>
+</div>
+
+<div class="form-group">
+<label for="name">Name</label>
+<input name="name" id="name" placeholder="First name"><br>
+<span id="un" style="color: red; font-size: 10px"></span>
+</div>
+
+<div class="form-group">
+<label for="surname">Surname</label>
+<input name="surname" id="surname" placeholder="Last name"><br>
+<span id="uln" style="color: red; font-size: 10px"></span>
+</div>
+
+<div class="form-group">
+<label for="donuts">Doughnuts Quantity</label>
+<input name="donuts" id="donuts" placeholder="1"><br>
+<span id="dn" style="color: red"></span>
+</div>
+
+<hr>
+<button type="submit">Submit Message</button>
+</form>
+
+<script type="text/javascript">
+
+const form = document.getElementById("logOrder");
+const orderDate = document.getElementById("order");
+const collectionDate = document.getElementById("collection");
+const name = document.getElementByID("name");
+const surname = document.getElementById("surname");
+const doughnuts = document.getElementById("donuts");
+
+const order = document.getElementById("od");
+const collection = document.getElementById("cd");
+const nameSpan = document.getElementById("un");
+const lastnameSpan = document.getElementById("uln");
+const donuts = document.getElementById("donuts");
+
+function validateString(str){
+	const re = /^[a-zA-Z]+ [a-zA-Z]+$/;
+	re.test(str);
+}
+
+function hasSpecialChars(str){
+	const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+	return specialChars.test(str);
+}
+
+function isValidDate(s) {
+    var dateFormat = /^\d{1,4}[\.|\/|-]\d{1,2}[\.|\/|-]\d{1,4}$/;
+
+    if (dateFormat.test(s)) {
+        s = s.replace(/0*(\d*)/gi,"$1");
+        var dateArray = s.split(/[\.|\/|-]/);
+      
+        dateArray[1] = dateArray[1]-1;
+
+        if (dateArray[2].length<4) {
+            dateArray[2] = (parseInt(dateArray[2]) < 50) ? 2000 + parseInt(dateArray[2]) : 1900 + parseInt(dateArray[2]);
+        }
+
+        var testDate = new Date(dateArray[2], dateArray[1], dateArray[0]);
+        if (testDate.getDate()!=dateArray[0] || testDate.getMonth()!=dateArray[1] || testDate.getFullYear()!=dateArray[2]) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return false;
+    }
+}
+
+function checkInputs(){
+	if(orderDate.value.trim() == ""){
+		order.innerHTML = "No date has been entered";
+		return false;
+	}else{
+		if(!isValidDate(orderDate.value)){
+			order.innerHTML = "That date is invalid";
+			return false;
+		}else{
+			order.innerHTML = "";
+		}
+	}
+	
+	if(collectionDate.value.trim() == ""){
+		collection.innerHTML = "No date has been entered";
+		return false;
+	}else{
+		if(!isValidDate(collectionDate.value)){
+			collection.innerHTML = "That date is invalid";
+			return false;
+		}else{
+			collection.innerHTML = "";
+		}
+	}
+	
+	var hasNum = /\d/;
+	if(name.value.trim() == ""){
+		nameSpan.innerHTML = "Don't forget to type in your name";
+		return false;
+	}else{
+		if(hasNum.test(name.value)){
+			nameSpan.innerHTML = "No name has an integer in it";
+			return false;
+		}else if(hasSpecialChars(name.value)){
+			nameSpan.innerHTML = "Entered string has special characters.";
+			return false;
+		}else{
+			nameSpan.innerHTML = "";
+		}
+	}
+	
+	if(surname.value.trim() == ""){
+		lastnameSpan.innerHTML = "Don't forget to type in your surname";
+		return false;
+	}else{
+		if(hasNum.test(surname.value)){
+			lastnameSpan.innerHTML = "No surname has an integer in it";
+			return false;
+		}else if(hasSpecialChars(name.value)){
+			lastnameSpan.innerHTML = "Entered string has special characters.";
+			return false;
+		}else{
+			lastnameSpan.innerHTML = "";
+		}
+	}
+	
+	if(doughnuts.value.trim() == ""){
+		donuts.innerHTML = "You didn't specify the number of doughnuts you need";
+		return false;
+	}else if(isNaN(doughnuts.value)){
+		donuts.innerHTML = "Input accepts integers only here.";
+		return false;
+	}else if((doughnuts.value % 1) != 0){
+		donuts.innerHTML = "Please type in whole numbers only.";
+		return false;
+	}else{
+		donuts.innerHTML = "";
+	}
+}
+
+form.addEventListener('submit', function (e) {
+	
+	e.preventDefault();
+	if(checkInputs()){
+		form.submit();
+	}
+});
+
+</script>
+</body>
+</html>

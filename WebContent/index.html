@@ -1,0 +1,186 @@
+<html>
+	<head>
+		<title>Circles</title>
+	</head>
+
+	<body>
+
+		<form id="logOrder" style='margin: auto; width: 220px;' action="SaveInfoOnServlet" method="post" onsubmit="checkInputs()">
+			<label>Order Date: </label><br>
+			<input type="text" autocomplete="off" id="orderDate" name="date1" placeholder="dd/MM/yy"><span id="od" style="color: red"></span><br><br>
+
+			<label>Collection Date: </label>
+			<input type="text" autocomplete="off" id="collectionDate" name="date2" placeholder="dd/MM/yy"><span id="cd" style="color: red"></span><br><br>
+
+			<label>First Name: </label>
+			<input type="text" autocomplete="off" id="userName" name="name"><span id="un" style="color: red"></span><br><br>
+		
+			<label>User Last Name: </label>
+			<input type="text" autocomplete="off" id="userLastName" name="lname"><span id="uln" style="color: red"></span><br><br>
+		
+			<label>Doughnuts Needed: </label>
+			<input type="text" autocomplete="off" name="donuts" id="doughnuts"><span id="dn" style="color: red"></span><br><br>
+		
+			<input type="submit" name="SubmitQuery" id="SubmitQuery"><br><br>
+			<button onclick="resetInfo()" name="resetData">Reset Data</button><br><br>
+		</form>
+
+		<form action="SaveInfoOnServlet" method="post" style="margin: auto; width: 220px;">
+			<input type="submit" name="ViewOrders" value="View Orders"><br><br>
+		</form>
+
+	<script defer>
+		let orderDate = document.getElementById('orderDate');
+		let collectionDate = document.getElementById('collectionDate');
+		let username = document.getElementById('userName');
+		let surname = document.getElementById('userLastName');
+		let donuts = document.getElementById('doughnuts');
+		let form = document.getElementById('logOrder');
+
+		let order = document.getElementById('od');
+		let collection = document.getElementById('cd');
+		let name = document.getElementById('un');
+		let surname1 = document.getElementById('uln');
+		let doughnuts = document.getElementById('dn');
+
+	function resetInfo(){
+		orderDate.value = '';
+		collectionDate.value = '';
+		username.value = '';
+		surname.value = '';
+		donuts.value = '';
+		
+		order.innerHTML = '';
+		collection.innerHTML = '';
+		name.innerHTML = '';
+		surname1.innerHTML = '';
+		doughnuts.innerHTML = '';
+	}
+
+	function hasSpecialChars(str){
+		
+// 		for(let i = 0, j = str.length; i < j; i++){
+// 			if(str.charCodeAt(i) > 0 && str.charCodeAt(i) < 65){
+// 				return false;
+// 			}else if(str.charCodeAt(i) > 90 && str.charCodeAt(i) < 96){
+// 				return false;
+// 			}
+// 		}
+// 		return true;
+
+		const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+		return specialChars.test(str);
+	}
+	
+	function isValidDate(s) {
+	    var dateFormat = /^\d{1,4}[\.|\/|-]\d{1,2}[\.|\/|-]\d{1,4}$/;
+
+	    if (dateFormat.test(s)) {
+	        s = s.replace(/0*(\d*)/gi,"$1");
+	        var dateArray = s.split(/[\.|\/|-]/);
+	      
+	        dateArray[1] = dateArray[1]-1;
+
+	        if (dateArray[2].length<4) {
+	            dateArray[2] = (parseInt(dateArray[2]) < 50) ? 2000 + parseInt(dateArray[2]) : 1900 + parseInt(dateArray[2]);
+	        }
+
+	        var testDate = new Date(dateArray[2], dateArray[1], dateArray[0]);
+	        if (testDate.getDate()!=dateArray[0] || testDate.getMonth()!=dateArray[1] || testDate.getFullYear()!=dateArray[2]) {
+	            return false;
+	        } else {
+	            return true;
+	        }
+	    } else {
+	        return false;
+	    }
+	}
+	
+	function validateStr(str){
+		const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
+		regName.test(str);
+	}
+
+	function checkInputs(){
+	
+		if(orderDate.value == ""){
+			order.innerHTML = "Order Date is empty";
+			return false;
+		}else{
+			if(!isValidDate(orderDate.value)){
+				order.innerHTML = "Date entered is invalid";
+				return false;
+			}else{
+				order.innerHTML = "";
+			}
+		}
+	
+	
+		if(collectionDate.value == ""){
+			collection.innerHTML = "Collection Date is empty";
+			return false;
+		}else{
+			if(!isValidDate(collectionDate.value)){
+				collection.innerHTML = "Date entered is invalid";
+				return false;
+			}else{
+				collection.innerHTML = "";
+			}
+		}
+				
+		var hasNum = /\d/;
+		if(userName.value.trim() == "" || userName.value.trim() == " "){
+			name.innerHTML = 'Username has blank spaces or is empty';
+			return false;
+		}else if(hasNum.test(userName.value)){
+			name.innerHTML = 'The username has an integer';
+			return false;
+		}else{
+				if(hasSpecialChars(userName.value)){
+				name.innerHTML = "No special characters allowed on string";
+				return false;
+			}else{
+				name.innerHTML = "";
+			}
+		}
+		
+		if(surname.value.trim() == "" || surname.value.trim() == " "){
+			surname1.innerHTML = 'The user surname has blank spaces or is empty';
+			return false;
+		}else if(hasNum.test(surname.value)){
+			surname1.innerHTML = 'The user surname has an integer';
+			return false;
+		}else{
+			if(hasSpecialChars(surname.value)){
+				surname1.innerHTML = "No special characters allowed on string";
+				return false;
+			}else{
+				surname1.innerHTML = "";
+			}
+		}
+		
+		if(isNaN(donuts.value)){
+			doughnuts.innerHTML = 'Doughnuts are not an integer';
+			return false;
+		}else if(donuts.value.trim() <= 0){
+			doughnuts.innerHTML = 'Doughnuts should be greater than 1, at least';
+			return false;
+		}else{
+			doughnuts.innerHTML = '';
+		}
+		return true;
+	}
+
+	form.addEventListener("submit", function (e) {
+		 		
+		if(checkInputs() === true){
+			form.submit();
+		}
+	
+		console.log("Hello World");
+	
+	});
+</script>
+
+</body>
+</html>

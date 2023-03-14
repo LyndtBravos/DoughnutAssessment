@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Circles</title>
+</head>
+<body>
+<h1>Orders Saved</h1>
+<div id="container">
+<p></p>
+<button onclick="fillData()">History</button>
+</div>
+</body>
+<script src="formData.js">
+function fillData() {
+	const page = window.open("index.html");
+	
+	page.addEventListener('DOMContentLoaded', () => {
+
+	let date1 = page.document.getElementById("orderDate").value;
+    let date2 = page.document.getElementById("collectionDate").value;
+    let firstName = page.document.getElementById("firstname").value;
+    let lastName = page.document.getElementById("lastname").value;
+    let donuts = page.document.getElementById("donutsOrdered").value;
+    let results = date1 + "\t" + date2 + "\t" + firstName + "\t" + lastName + "\t" + donuts;
+	
+	let ele2 = document.getElementById("container");
+	ele2.innerHTML += results + "<br>";
+	})
+}
+</script>
+</html>
